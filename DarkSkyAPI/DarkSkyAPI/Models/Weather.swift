@@ -10,12 +10,17 @@ import Foundation
 
 struct WeatherResponse: Codable {
     let daily: Weather
+    let currently: Currently
+}
+
+struct Currently: Codable {
+    let temperature: Double
 }
 
 struct Weather: Codable {
     let summary: String
     let icon: String
-    let temperature: [Temperature]
+    var temperature: [Temperature]
     
     enum WeatherKeys: String, CodingKey {
         case summary, icon, temperature = "data"
@@ -35,6 +40,8 @@ struct Temperature: Codable {
     var time: TimeInterval
     var high: Double
     var low: Double
+    
+    var current: Double = 0.0
     
     enum TemperatureKeys: String, CodingKey {
          case time, high = "temperatureHigh", low = "temperatureLow"

@@ -13,14 +13,13 @@ class WeatherTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchWeather()
+        tableView.rowHeight = view.bounds.height
+        checkLocationPermission()
     }
     
-    private func fetchWeather() {
-        
-        let testLocation = CLLocation(latitude: 42.3601, longitude: -71.0589)
-        
-        weatherController.fetchWeather(location: testLocation) { (weather, error) in
+    private func fetchWeather(location: CLLocation) {
+        locationManager.stopUpdatingLocation()
+        weatherController.fetchWeather(location: location) { (weather, error) in
             
             if let error = error {
                 // handle error
@@ -32,91 +31,126 @@ class WeatherTableViewController: UITableViewController {
                 self.weather = weather
                 
                 DispatchQueue.main.async {
-                    self.setAppearance()
+                    self.tableView.reloadData()
                 }
             }
         }
     }
     
-    private func setAppearance() {
-        
-        guard let weather = weather else {
-            // handle no data
-            return
-        }
-        
-        print(weather.summary)
+    @IBAction func refreshButtonWasTapped(_ sender: UIBarButtonItem) {
+        checkLocationPermission()
     }
+    
+    private func checkLocationPermission() {
+        if CLLocationManager.locationServicesEnabled() {
+            setUpLocationManager()
+            requestLocationPermission()
+        } else {
+            let locationServicesAlert = UIAlertController(title: "Location Services Disabled", message: "Please update your settings to allow location services in DarkSky.", preferredStyle: .alert)
+            let dismiss = UIAlertAction(title: "Okay", style: .default, handler: nil)
+            locationServicesAlert.addAction(dismiss)
+            present(locationServicesAlert, animated: true, completion: nil)
+        }
+    }
+    
+    private func setUpLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    private func requestLocationPermission() {
+        
+        let dismiss = UIAlertAction(title: "Okay", style: .default, handler: nil)
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        case .denied:
+            let deniedAlert = UIAlertController(title: "Location Access Denied", message: "No data can be retrieved because access to your location was denied.", preferredStyle: .alert)
+            deniedAlert.addAction(dismiss)
+            self.present(deniedAlert, animated: true, completion: nil)
+            
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+
+        case .restricted:
+            let restrictedAlert = UIAlertController(title: "Location Access Restricted", message: "No data can be retrieved because access to your location is restricted.", preferredStyle: .alert)
+            restrictedAlert.addAction(dismiss)
+            self.present(restrictedAlert, animated: true, completion: nil)
+            
+        default:
+            let unknownAlert = UIAlertController(title: "Location Access Not Found", message: "No data can be retrieved at this time.", preferredStyle: .alert)
+            unknownAlert.addAction(dismiss)
+            self.present(unknownAlert, animated: true, completion: nil)
+        }
+    }
+    
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        1
     }
 
-    /*
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath)
+        guard let weatherCell = cell as? WeatherTableViewCell, let weather = weather else { return cell }
+        
+        let temp = weather.temperature[0]
+        
+        let date = Date(timeIntervalSinceNow: temp.time)
+        let dayString = date.day()
+        
+        weatherCell.iconImageView.image = UIImage(named: weather.icon)
+        weatherCell.currentTempLabel.text = String(temp.current)
+        weatherCell.todaysForecastLabel.text = "\(dayString) H:\(temp.high) L:\(temp.low)"
+        
+        return weatherCell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     // MARK: - Navigation
 
-  
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "ShowWeatherDetail" {
             
+            guard let detailVC = segue.destination as? DetailViewController else {
+                fatalError("Could not unwrap DetailViewController.")
+            }
             
+            guard let weather = weather else {
+                let noWeatherAlert = UIAlertController(title: "No Weather Data", message: "No weather data was found.", preferredStyle: .alert)
+                present(noWeatherAlert, animated: true, completion: nil)
+                return
+            }
             
+            detailVC.weather = weather
         }
     }
     
+    let locationManager = CLLocationManager()
     var weather: Weather?
     let weatherController = WeatherController()
+}
+
+extension WeatherTableViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        fetchWeather(location: location)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        checkLocationPermission()
+    }
+}
+
+extension Date {
+    func day() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd"
+        formatter.dateStyle = .medium
+        return formatter.string(from: self)
+    }
 }

@@ -44,7 +44,9 @@ class WeatherController {
             
             do {
                 let weatherResponse = try JSONDecoder().decode(WeatherResponse.self, from: data)
-                let weather = weatherResponse.daily
+                var weather = weatherResponse.daily
+                weather.temperature[0].current = weatherResponse.currently.temperature
+                
                 completion(weather, nil)
             } catch {
                 completion(nil, NetworkingError.unableToDecode)
