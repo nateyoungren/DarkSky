@@ -20,6 +20,7 @@
 		779CB395236B7DD20021DD0F /* Date+Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779CB394236B7DD20021DD0F /* Date+Day.swift */; };
 		779CB398236B825E0021DD0F /* UIViewController+ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779CB397236B825E0021DD0F /* UIViewController+ColorScheme.swift */; };
 		779CB39A236B86F20021DD0F /* AppearanceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779CB399236B86F20021DD0F /* AppearanceHelper.swift */; };
+		779CB39D236B8F1E0021DD0F /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779CB39C236B8F1E0021DD0F /* NavigationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		779CB394236B7DD20021DD0F /* Date+Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Day.swift"; sourceTree = "<group>"; };
 		779CB397236B825E0021DD0F /* UIViewController+ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+ColorScheme.swift"; sourceTree = "<group>"; };
 		779CB399236B86F20021DD0F /* AppearanceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceHelper.swift; sourceTree = "<group>"; };
+		779CB39C236B8F1E0021DD0F /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				77857CA7236B47A40051928F /* WeatherTableViewController.swift */,
 				77857CA9236B47BD0051928F /* DetailViewController.swift */,
 				77857CB6236B4EF20051928F /* WeatherController.swift */,
+				779CB39C236B8F1E0021DD0F /* NavigationViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				779CB398236B825E0021DD0F /* UIViewController+ColorScheme.swift in Sources */,
+				779CB39D236B8F1E0021DD0F /* NavigationViewController.swift in Sources */,
 				779CB395236B7DD20021DD0F /* Date+Day.swift in Sources */,
 				77857CAF236B49A90051928F /* WeatherTableViewCell.swift in Sources */,
 				779CB39A236B86F20021DD0F /* AppearanceHelper.swift in Sources */,

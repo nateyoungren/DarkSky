@@ -14,4 +14,8 @@ enum AppearanceHelper {
     static let blueGray = UIColor(red: 209/255, green: 214/255, blue: 231/255, alpha: 1)
     static let midGray = UIColor(red: 176/255, green: 187/255, blue: 214/255, alpha: 1)
     static let darkNight = UIColor(red: 89/255, green: 97/255, blue: 127/255, alpha: 1)
+    
+    static func generalStyle() {
+        UIBarButtonItem.appearance().tintColor = darkNight
+    }
 }

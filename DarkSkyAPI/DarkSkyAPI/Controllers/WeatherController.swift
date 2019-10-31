@@ -12,6 +12,7 @@ import CoreLocation
 enum NetworkingError: Error {
     case noData
     case unableToDecode
+    case badAddress
 }
 
 class WeatherController {
@@ -19,7 +20,7 @@ class WeatherController {
     func fetchWeather(location: CLLocation, completion: @escaping (Weather?, Error?) -> Void) {
         
         guard let baseURL = baseURL else {
-            // handle error
+            completion(nil, NetworkingError.badAddress)
             return
         }
         

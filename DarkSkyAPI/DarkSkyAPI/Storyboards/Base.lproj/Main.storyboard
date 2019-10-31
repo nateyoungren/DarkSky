@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Dark Sky-->
+        <!--Weather Table View Controller-->
         <scene sceneID="VVN-Zj-Mbh">
             <objects>
                 <tableViewController id="gtD-0g-pFQ" customClass="WeatherTableViewController" customModule="DarkSkyAPI" customModuleProvider="target" sceneMemberID="viewController">
@@ -32,7 +32,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJh-rF-msa">
                                                     <rect key="frame" x="74" y="0.0" width="19.5" height="50"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="31"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -43,7 +43,7 @@
                                                 <constraint firstAttribute="width" constant="374" id="2Qn-tL-whs"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -70,7 +70,7 @@
                             <outlet property="delegate" destination="gtD-0g-pFQ" id="LDf-Pk-EU4"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Dark Sky" id="f7o-Ok-Xob">
+                    <navigationItem key="navigationItem" id="f7o-Ok-Xob">
                         <barButtonItem key="rightBarButtonItem" title="Refresh" id="Zmy-jx-2K8">
                             <connections>
                                 <action selector="refreshButtonWasTapped:" destination="gtD-0g-pFQ" id="hFW-he-4IC"/>
@@ -115,10 +115,10 @@
             </objects>
             <point key="canvasLocation" x="1483" y="126"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="mHI-M8-z94">
             <objects>
-                <navigationController id="HM1-SI-p3G" sceneMemberID="viewController">
+                <navigationController id="HM1-SI-p3G" customClass="NavigationViewController" customModule="DarkSkyAPI" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cLo-n7-UUC">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

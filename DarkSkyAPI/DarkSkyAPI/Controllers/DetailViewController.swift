@@ -21,7 +21,11 @@ class DetailViewController: UIViewController {
             return
         }
         
+        let colorScheme = setColorScheme(icon: weather.icon)
+        view.backgroundColor = colorScheme[.background]
+        
         summaryLabel.text = weather.summary
+        summaryLabel.textColor = colorScheme[.text]
     }
     
     var weather: Weather?

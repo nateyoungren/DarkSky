@@ -21,7 +21,9 @@ class WeatherTableViewController: UITableViewController {
         weatherController.fetchWeather(location: location) { (weather, error) in
             
             if let error = error {
-                // handle error
+                let dismiss = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                let fetchAlert = UIAlertController(title: "Network Error", message: "Encountered error during network call.", preferredStyle: .alert)
+                fetchAlert.addAction(dismiss)
                 print(error)
                 return
             }
@@ -50,6 +52,7 @@ class WeatherTableViewController: UITableViewController {
             let dismiss = UIAlertAction(title: "Okay", style: .default, handler: nil)
             locationServicesAlert.addAction(dismiss)
             present(locationServicesAlert, animated: true, completion: nil)
+            setAppearance()
         }
     }
     
@@ -87,10 +90,12 @@ class WeatherTableViewController: UITableViewController {
     
     private func setAppearance() {
         tableView.rowHeight = view.bounds.height
+        tableView.separatorStyle = .none
         
         guard let weather = weather else { return }
         let colorScheme = setColorScheme(icon: weather.icon)
-        view.backgroundColor = colorScheme["background"] ?? UIColor.white
+        view.backgroundColor = colorScheme[.background] ?? UIColor.white
+        tableView.reloadData()
     }
     
 
@@ -99,7 +104,6 @@ class WeatherTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         1
     }
-
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath)
@@ -112,15 +116,17 @@ class WeatherTableViewController: UITableViewController {
         
         weatherCell.iconImageView.image = UIImage(named: weather.icon)
         weatherCell.currentTempLabel.text = String(Int(temp.current))
-        weatherCell.todaysForecastLabel.text = "\(dayString) H:\(Int(temp.high)) L:\(Int(temp.low))"
+        weatherCell.todaysForecastLabel.text = "\(dayString) H: \(Int(temp.high)) L: \(Int(temp.low))"
         
         let colorScheme = setColorScheme(icon: weather.icon)
-        let textColor = colorScheme["text"] ?? UIColor.black
+        let textColor = colorScheme[.text] ?? UIColor.black
         
-        weatherCell.backgroundColor = colorScheme["background"] ?? .clear
+        weatherCell.backgroundColor = colorScheme[.background] ?? .clear
         
-        weatherCell.currentTempLabel.tintColor = textColor
-        weatherCell.todaysForecastLabel.tintColor = textColor
+        weatherCell.currentTempLabel.textColor = textColor
+        weatherCell.todaysForecastLabel.textColor = textColor
+        
+        weatherCell.selectionStyle = .none
         
         return weatherCell
     }
