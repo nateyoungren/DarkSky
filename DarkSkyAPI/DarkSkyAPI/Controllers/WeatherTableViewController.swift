@@ -7,17 +7,45 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        fetchWeather()
+    }
+    
+    private func fetchWeather() {
+        
+        let testLocation = CLLocation(latitude: 42.3601, longitude: -71.0589)
+        
+        weatherController.fetchWeather(location: testLocation) { (weather, error) in
+            
+            if let error = error {
+                // handle error
+                print(error)
+                return
+            }
+            
+            if let weather = weather {
+                self.weather = weather
+                
+                DispatchQueue.main.async {
+                    self.setAppearance()
+                }
+            }
+        }
+    }
+    
+    private func setAppearance() {
+        
+        guard let weather = weather else {
+            // handle no data
+            return
+        }
+        
+        print(weather.summary)
     }
 
     // MARK: - Table view data source
@@ -77,14 +105,18 @@ class WeatherTableViewController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+  
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "ShowWeatherDetail" {
+            
+            
+            
+        }
     }
-    */
-
+    
+    var weather: Weather?
+    let weatherController = WeatherController()
 }
