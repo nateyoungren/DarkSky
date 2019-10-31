@@ -13,7 +13,6 @@ class WeatherTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = view.bounds.height
         checkLocationPermission()
     }
     
@@ -32,6 +31,7 @@ class WeatherTableViewController: UITableViewController {
                 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
+                    self.setAppearance()
                 }
             }
         }
@@ -85,6 +85,14 @@ class WeatherTableViewController: UITableViewController {
         }
     }
     
+    private func setAppearance() {
+        tableView.rowHeight = view.bounds.height
+        
+        guard let weather = weather else { return }
+        let colorScheme = setColorScheme(icon: weather.icon)
+        view.backgroundColor = colorScheme["background"] ?? UIColor.white
+    }
+    
 
     // MARK: - Table view data source
 
@@ -103,8 +111,16 @@ class WeatherTableViewController: UITableViewController {
         let dayString = date.day()
         
         weatherCell.iconImageView.image = UIImage(named: weather.icon)
-        weatherCell.currentTempLabel.text = String(temp.current)
-        weatherCell.todaysForecastLabel.text = "\(dayString) H:\(temp.high) L:\(temp.low)"
+        weatherCell.currentTempLabel.text = String(Int(temp.current))
+        weatherCell.todaysForecastLabel.text = "\(dayString) H:\(Int(temp.high)) L:\(Int(temp.low))"
+        
+        let colorScheme = setColorScheme(icon: weather.icon)
+        let textColor = colorScheme["text"] ?? UIColor.black
+        
+        weatherCell.backgroundColor = colorScheme["background"] ?? .clear
+        
+        weatherCell.currentTempLabel.tintColor = textColor
+        weatherCell.todaysForecastLabel.tintColor = textColor
         
         return weatherCell
     }
@@ -143,14 +159,5 @@ extension WeatherTableViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkLocationPermission()
-    }
-}
-
-extension Date {
-    func day() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd"
-        formatter.dateStyle = .medium
-        return formatter.string(from: self)
     }
 }
