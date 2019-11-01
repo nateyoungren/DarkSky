@@ -46,6 +46,7 @@ class WeatherController {
             do {
                 let weatherResponse = try JSONDecoder().decode(WeatherResponse.self, from: data)
                 var weather = weatherResponse.daily
+                weather.icon = weatherResponse.currently.icon
                 weather.temperature[0].current = weatherResponse.currently.temperature
                 
                 completion(weather, nil)

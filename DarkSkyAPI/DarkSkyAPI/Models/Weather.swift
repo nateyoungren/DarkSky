@@ -15,11 +15,12 @@ struct WeatherResponse: Codable {
 
 struct Currently: Codable {
     let temperature: Double
+    let icon: String
 }
 
 struct Weather: Codable {
     let summary: String
-    let icon: String
+    var icon: String
     var temperature: [Temperature]
     
     enum WeatherKeys: String, CodingKey {
