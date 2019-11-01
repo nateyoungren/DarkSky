@@ -111,7 +111,7 @@ class WeatherTableViewController: UITableViewController {
         
         let temp = weather.temperature[0]
         
-        let date = Date(timeIntervalSinceNow: temp.time)
+        let date = Date(timeIntervalSince1970: temp.time)
         let dayString = date.day()
         
         weatherCell.iconImageView.image = UIImage(named: weather.icon)
